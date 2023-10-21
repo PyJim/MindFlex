@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     text: {
-        fontSize: 15,
+        fontSize: 16,
         textAlign: 'justify',
         opacity: 0.7
     }

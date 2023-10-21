@@ -1,12 +1,20 @@
-import React, {useState, useEffect} from "react";
-import { View,Text, SafeAreaView, StyleSheet, Image, TextInput, TouchableOpacity , Button} from "react-native";
-import { getAuth, updateProfile, updateEmail, updatePassword } from "firebase/auth";
-import * as WebBrowser from 'expo-web-browser';
+import React, { useState } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TextInput,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    ActivityIndicator,
+    Alert, // Import Alert
+    } from 'react-native';
+    import { getAuth, updateProfile, updateEmail, updatePassword } from 'firebase/auth';
 
-import Authentication from "../../Hooks/authentication";
+    import Authentication from '../../Hooks/authentication';
 
-
-const Profile = ({ navigation }) => {
+    const Profile = ({ navigation }) => {
     const user = Authentication();
 
     const [displayName, setDisplayName] = useState(user && user.displayName ? user.displayName : '');
@@ -15,50 +23,71 @@ const Profile = ({ navigation }) => {
     const [confirmPassword, setConfirmPassword] = useState(user && user.password ? user.password : '');
     const [message, setMessage] = useState('No changes made');
     const [refreshKey, setRefreshKey] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSaveChanges = async () => {
-        // Check if password and confirm password match (if password is not empty)
-        if (password !== confirmPassword) {
-            alert("Password do not match.");
-            return;
-        }
+        // Show a confirmation dialog
+        Alert.alert(
+        'Save Changes',
+        'Are you sure you want to save these changes?',
+        [
+            {
+            text: 'Cancel',
+            onPress: () => console.log('Save Changes canceled'),
+            style: 'cancel',
+            },
+            {
+            text: 'Save Changes',
+            onPress: async () => {
+                setIsLoading(true); // Set loading state
 
-        const auth = getAuth();
-        const currentUser = auth.currentUser;
+                if (password !== confirmPassword) {
+                setIsLoading(false); // Reset loading state
+                Alert.alert('Password does not match.');
+                return;
+                }
 
-        const isDisplayNameChanged = displayName !== currentUser.displayName;
-        const isEmailChanged = email !== currentUser.email;
-        const isPasswordChanged = password !== currentUser.password;
+                const auth = getAuth();
+                const currentUser = auth.currentUser;
 
-        try {
-            if (isDisplayNameChanged) {
-                await updateProfile(currentUser, {
+                const isDisplayNameChanged = displayName !== currentUser.displayName;
+                const isEmailChanged = email !== currentUser.email;
+                const isPasswordChanged = password !== currentUser.password;
+
+                try {
+                if (isDisplayNameChanged) {
+                    await updateProfile(currentUser, {
                     displayName: displayName,
-            });
-        }
-    
-            if (isEmailChanged) {
-                await updateEmail(currentUser, email);
-            }
-        
-            if (isPasswordChanged) {
-                await updatePassword(currentUser, password);
-            }
-        
-            alert("Changes saved successfully. It may take a while to show.");
-        } catch (error) {
-            alert("An error occurred while saving changes. Please try again later.");
-        }
-        setRefreshKey(1);
+                    });
+                }
+
+                if (isEmailChanged) {
+                    await updateEmail(currentUser, email);
+                }
+
+                if (isPasswordChanged) {
+                    await updatePassword(currentUser, password);
+                }
+
+                setIsLoading(false); // Reset loading state
+                Alert.alert('Changes saved successfully. It may take a while to show.');
+                } catch (error) {
+                setIsLoading(false); // Reset loading state
+                Alert.alert('An error occurred while saving changes. Please try again later.');
+                }
+                setRefreshKey(1);
+            },
+            },
+        ],
+        { cancelable: false }
+        );
     };
-    
-    
 
     return (
-        <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingVertical: 40 }}>
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset="-300" style={styles.container}>
         <View style={styles.header}>
             <Text style={styles.headerText}>Hello {user ? user.displayName : 'Guest'}</Text>
-            <TouchableOpacity onPress={() => { navigation.openDrawer() }}>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <Image source={require('../../assets/boy.png')} style={styles.headerImage} />
             </TouchableOpacity>
         </View>
@@ -91,26 +120,43 @@ const Profile = ({ navigation }) => {
             value={confirmPassword}
             onChangeText={(text) => setConfirmPassword(text)}
         />
-        <TouchableOpacity style={[styles.button]} onPress={handleSaveChanges}>
-            <Text style={[{ fontSize: 20, color: '#fff', fontWeight: 'bold' }]}>Save Changes</Text>
+        <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
+            <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Save Changes</Text>
         </TouchableOpacity>
-        </SafeAreaView>
+        {isLoading && (
+            <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#aa18ea" />
+            </View>
+        )}
+        </KeyboardAvoidingView>
     );
 };
 
 export default Profile;
 
+
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: 10,
+        justifyContent: 'center',
+    },
+    innerContainer: {
+        flexGrow: 1,
+        alignItems: 'center',
+    },
     header: {
         width: '100%',
         paddingHorizontal: '8%',
         paddingVertical: 10,
         height: 80,
         flexDirection: 'row',
+        marginTop: -60,
         alignItems: 'center',
         justifyContent: 'space-between',
         borderBottomWidth: 3,
-        borderBlockColor: 'rgba(0, 0, 0, 0.06)'
+        borderBlockColor: 'rgba(0, 0, 0, 0.06)',
     },
     headerText: {
         fontSize: 23,
@@ -125,12 +171,13 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginVertical: 50
+        marginTop: 100,
+        marginBottom: 50,
     },
     Image: {
-        width: 150,
-        height: 150,
-        borderRadius: 75
+        width: 120,
+        height: 120,
+        borderRadius: 75,
     },
     textInput: {
         width: '80%',
@@ -150,6 +197,9 @@ const styles = StyleSheet.create({
         marginTop: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#aa18ea'
-    }
-})
+        backgroundColor: '#aa18ea',
+    },
+    loading: {
+        marginTop: 10,
+    },
+});
