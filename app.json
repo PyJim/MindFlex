@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "auth-system",
-    "slug": "auth-system",
+    "name": "MindFlex",
+    "slug": "mindflex",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#6b3fa0"
     },
     "assetBundlePatterns": [
       "**/*"

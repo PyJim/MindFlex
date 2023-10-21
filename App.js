@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import Starter from './screens/starter/Starter';
 import 'react-native-gesture-handler';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import UserStack from './screens/user/UserStack';
 import { NavigationContainer } from '@react-navigation/native';
 import Authentication from './Hooks/authentication';
