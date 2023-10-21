@@ -12,7 +12,7 @@ const Login = ({navigation}) =>{
     const [email, setEmail] = useState('')
     const [password, setPassword] =  useState('')
     const [signinMsg, setSigninMsg] = useState('Yes')
-    const [msgColor, setMsgColor] = useState('white')
+    const [msgColor, setMsgColor] = useState('transparent')
 
     async function signinUser(email, password){
         if (email === '' || password === ''){
