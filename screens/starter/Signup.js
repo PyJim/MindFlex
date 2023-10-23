@@ -49,7 +49,7 @@ const Signup = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Image style={styles.image} source={require('../../assets/boy.png')} />
+            <Image style={styles.image} source={require('../../assets/largeLogo.png')} />
             <Text style={{ color: msgColor }}>{signupMsg}</Text>
             <TextInput style={styles.textInput} placeholder="Email" value={email} onChangeText={(text) => setEmail(text)} />
             <TextInput style={styles.textInput} placeholder="Password" value={password} secureTextEntry onChangeText={(text) => setPassword(text)} />
