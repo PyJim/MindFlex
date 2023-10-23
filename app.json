@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/Logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jimmyessel.mindflex"
     },
     "web": {
       "favicon": "./assets/Logo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7c52a07b-6bdc-44fd-9c9b-c4af06ba7c2a"
+      }
     }
   }
 }
