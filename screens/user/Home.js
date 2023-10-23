@@ -93,6 +93,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        borderBottomWidth: 3,
+        borderBlockColor: 'rgba(0, 0, 0, 0.06)',
     },
     headerText: {
         fontSize: 23,

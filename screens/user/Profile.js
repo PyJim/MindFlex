@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 100,
+        marginTop: 70,
         marginBottom: 50,
     },
     Image: {

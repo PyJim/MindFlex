@@ -3,9 +3,12 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { SafeAreaView, TouchableOpacity, Text, TextInput, Image, StyleSheet, View, ActivityIndicator } from "react-native";
 import app from "../../firebaseConfig";
 import { Link } from "@react-navigation/native";
-import Home from "../user/Home";
 
-const auth = getAuth(app)
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+const auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -45,7 +48,7 @@ const Login = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Image style={styles.image} source={require('../../assets/girl.png')} />
+            <Image style={styles.image} source={require('../../assets/largeLogo.png')} />
             <Text style={{ color: msgColor }}>{signinMsg}</Text>
             <TextInput style={styles.textInput} placeholder="Email" value={email} onChangeText={(text) => setEmail(text)} />
             <TextInput style={styles.textInput} placeholder="Password" value={password} secureTextEntry onChangeText={(text) => setPassword(text)} />
